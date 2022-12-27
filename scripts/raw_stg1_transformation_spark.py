@@ -81,9 +81,9 @@ SELECT
 d.sessionstarttime,
 d.sessionendtime,
 d.routeid,
-g.longitude, g.latitude, g.timestamp
+g.longitude, g.latitude, g.timestamp, g.vehicle_no
 FROM raw_dispatch d 
-full outer join raw_gps_raw  g
+left join raw_gps_raw  g
 on d.userid = g.vehicle_no
 and g.timestamp between d.sessionstarttime and d.sessionendtime
 ''')
@@ -115,7 +115,7 @@ dispatch_gps_pdf['distance'] = [haversine(dispatch_gps_pdf.longitude[i],dispatch
 dispatch_gps_pdf['distance'] = dispatch_gps_pdf['distance'].round(decimals=3)
 
 
-print(dispatch_gps_pdf.head())
+
 dispatch_gps_spark_df=spark.createDataFrame(dispatch_gps_pdf) 
 
 

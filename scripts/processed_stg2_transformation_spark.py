@@ -23,7 +23,7 @@ s3_output_path_gps_dispatch_stop_time = 's3://chalo-quess-ml-test/glue_processed
 
 datasource0 = glueContext.create_dynamic_frame.from_catalog(database = "chalo_processed", table_name = "processed_gps_dispatch_stop_info", transformation_ctx = "datasource0")
 
-applymapping1 = ApplyMapping.apply(frame = datasource0, mappings = [("timestamp", "string", "timestamp_val", "bigint"), ("stop_id", "string", "stop_id", "string"), ("name", "string", "name", "string"), ("distance", "double", "distance", "double"), ("routeid", "string", "routeid", "string")], transformation_ctx = "applymapping1")
+applymapping1 = ApplyMapping.apply(frame = datasource0, mappings = [("timestamp", "string", "timestamp_val", "bigint"), ("stop_id", "string", "stop_id", "string"), ("name", "string", "name", "string"), ("distance", "double", "distance", "double"), ("routeid", "string", "routeid", "string"), ("vehicle_no", "string", "vehicle_no", "string")], transformation_ctx = "applymapping1")
 
 joined_df = applymapping1.toDF()
 
@@ -42,7 +42,7 @@ joined_df = joined_df.withColumn("df_timestamp", from_unixtime((joined_df.timest
 
 
 
-joined_df.show(truncate = False)
+#joined_df.show(truncate = False)
 
   
   
