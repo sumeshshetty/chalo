@@ -4,6 +4,7 @@ from awsglue.utils import getResolvedOptions
 from pyspark.context import SparkContext
 from awsglue.context import GlueContext
 from awsglue.job import Job
+from awsglue.dynamicframe import DynamicFrame
 sc = SparkContext()
 glueContext = GlueContext(sc)
 spark = glueContext.spark_session
@@ -20,7 +21,9 @@ logger = glueContext.get_logger()
 args = getResolvedOptions(sys.argv, ['JOB_NAME','s3_input_path_dispatch','s3_input_path_gps_raw','s3_input_path_route_info','s3_input_path_stop_info'])
 job.init(args['JOB_NAME'], args)
 
-
+print("************** args ************")
+print(args)
+print("************** args ************")
 
 args['s3_input_path_dispatch']='s3://chalo-quess-ml-test/dispatch'
 args['s3_input_path_gps_raw']='s3://chalo-quess-ml-test/tables/gps_raw'
@@ -103,16 +106,18 @@ applymapping1_stop_info = ApplyMapping.apply(frame = datasource_stop_info, mappi
 df_stops = applymapping1_stop_info.toDF()  
 
 
+# datasource_dispatch_df.write.mode("overwrite").parquet(s3_output_path_dispatch)
+# datasource_gps_raw_df.write.mode("overwrite").parquet(s3_output_path_gps_raw)
 
 datasource_dispatch_df.write.mode("overwrite").partitionBy("userid").parquet(s3_output_path_dispatch)
 datasource_gps_raw_df.write.mode("overwrite").partitionBy("vehicle_no").parquet(s3_output_path_gps_raw)
 
+
 df_route_info.write.mode("overwrite").partitionBy("route_id").parquet(s3_output_path_route_info)
 df_stops.write.mode("overwrite").partitionBy("stop_id").parquet(s3_output_path_stop_info)
+
+
 job.commit()
-      
+     
 
       
-
-
-
